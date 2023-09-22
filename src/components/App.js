@@ -20,7 +20,28 @@ const App = () => {
     webiste: "",
   });
 
-  const handleOnClick = () => {};
+  const handleOnClick = () => {
+    setIsLoading(LoadingStatus.IN_PROGRESS);
+    setTimeout(() => {
+      fetch(BASE_URL + "/" + userId)
+      .then((res) => {
+        console.log(res);
+        let resp = res.json();
+        
+        return resp;
+      })
+        .then((data) => { 
+          setUserData({
+            id: data.id,
+            email: data.email,
+            name: data.name,
+            phone: data.phone,
+            webiste: data.webiste,
+        });
+      });
+        setIsLoading(LoadingStatus.SUCCESS);
+    }, 2000);
+  };
 
   const onChangeHandler = (event) => {
     setUserId(event.target.value);
@@ -43,11 +64,15 @@ const App = () => {
 
       <div id="data">
         <h1>Click on the button to get the user</h1>
-        <h4 id="id">{userData.id}</h4>
-        <h4 id="email">{userData.email}</h4>
-        <h4 id="name">{userData.name}</h4>
-        <h4 id="phone">{userData.phone}</h4>
-        <h4 id="website">{userData.website}</h4>
+        { isLoading === LoadingStatus.IN_PROGRESS ? <Loader/> :
+        <>
+          <h4 id="id">{userData.id}</h4>
+          <h4 id="email">{userData.email}</h4>
+          <h4 id="name">{userData.name}</h4>
+          <h4 id="phone">{userData.phone}</h4>
+          <h4 id="website">{userData.website}</h4>
+        </>
+      }
       </div>
     </div>
   );
